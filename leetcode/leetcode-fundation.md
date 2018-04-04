@@ -1,34 +1,6 @@
 # leetcode练习（初级）
-## 1. 回文数字判断 
-
-```
-public static boolean isF(int x){
-		int x1=x;
-		boolean is=true;
-		int res=0;
-		if(x>0){
-			while(x>0){
-				res=x%10+res*10;
-				x=x/10;
-			}
-			if(res!=x1){
-				is=false;
-			}
-		}
-		else if(x==0){
-			is=true;
-		}
-		else
-			is=false;
-		return is; 
-	}
-```
-### 测试用例：
-- [ ] x=0
-- [ ] 负数
-- [ ] 正数
------
-##  2. 从排序数组中删除重复项（数组）
+##数组
+###  1. 从排序数组中删除重复项（数组）
 给定一个有序数组，你需要原地删除其中的重复内容，使每个元素只出现一次,并返回新的长度。
 不要另外定义一个数组，您必须通过用 O(1) 额外内存原地修改输入的数组来做到这一点。
 示例：
@@ -60,8 +32,7 @@ class Solution {
 }
 ```
 - 双指针
-
-##3. 买卖股票的最佳时机 II（数组）
+###2. 买卖股票的最佳时机 II（数组）
 假设有一个数组，它的第 i 个元素是一个给定的股票在第 i 天的价格。
 
 设计一个算法来找到最大的利润。你可以完成尽可能多的交易（多次买卖股票）。然而，你不能同时参与多个交易（你必须在再次购买前出售股票）。
@@ -83,7 +54,7 @@ class Solution {
 
 ```
 - 思路：假设下一天的价格比今天的高，就是有利润的，下一天的价格比今天的低，就应该抛售。
-##4. 旋转数组（数组）
+###3. 旋转数组（数组）
 将包含 n 个元素的数组向右旋转 k 步。
 例如，如果  n = 7 ,  k = 3，给定数组  [1,2,3,4,5,6,7]  ，向右旋转后的结果为 [5,6,7,1,2,3,4]。
 
@@ -147,7 +118,7 @@ class Solution {
 　　4 3 2 1 7 6 5　　分别把左右reverse 一下
 
 　　5 6 7 1 2 3 4　　把总数组reverse 一下就会得到答案
-##5. 存在重复（数组）
+###4. 存在重复（数组）
 给定一个整数数组，判断是否存在重复元素。
 
 如果任何值在数组中出现至少两次，函数应该返回 true。如果每个元素都不相同，则返回 false。
@@ -193,107 +164,7 @@ if (nums.length <= 1) {
     }
 }
 ```
-
-##6. 反转字符串
-- 解法1  3ms
-```
-class Solution {
-    public String reverseString(String s) {
-     if(s == null)
-        return null;
-    int len = s.length();
-    char[] cTmp = s.toCharArray();
-    char[] cRes = new char[len];
-    for (int i = 0; i < len; i++) {
-        cRes[i] = cTmp[len-1-i];
-    }
-    String sRes = String.valueOf(cRes);
-    return sRes;
-    }
-}
-```
-- 解法2 4ms
-```
- public static String reverseString(String s) {
-
-        StringBuilder stringBuilder = new StringBuilder(s.length());
-        for (int i = s.length(); i > 0; i--) {
-            stringBuilder.append(s.charAt(i-1));
-
-        }
-        String ss=stringBuilder.toString();
-        return ss;
-    }
-```
-- 解法3  2ms
-```
- public String reverseString(String s) {
-            if(s == null)
-                return null;
-            int len = s.length();
-            char[] cTmp = s.toCharArray();
-            char c;
-            for (int i = 0; i < len>>1; i++) {
-                c = cTmp[i];
-                cTmp[i] = cTmp[len -1 - i];
-                cTmp[len -1 - i] = c;
-            }
-            String sRes = String.valueOf(cTmp);
-            return sRes;
-        }
-    
-```
-- 解法4 2ms
-```
-    public String reverseString(String s) {
-    if(s == null || s.length() == 0)
-            return "";
-        char[] cs = s.toCharArray();
-        int begin = 0, end = s.length() - 1;
-        while(begin <= end){
-            char c = cs[begin];
-            cs[begin] = cs[end];
-            cs[end] = c;
-            begin++;
-            end--;
-        }
-        return new String(cs);
-	}
-```
-- 解法5 3ms
-```
-class Solution {
-    public String reverseString(String s) {
-   StringBuilder sb = new StringBuilder(s);
-    return sb.reverse().toString();//reverse源码中也是用reverseString1（）这种方法，法234基本相同。StringBuilder线程不安全
-	}
-}
-
-```
-
-## 7. 删除链表的结点
-- 编写一个函数，在给定单链表一个结点(非尾结点)的情况下，删除该结点。
-
-假设该链表为1 -> 2 -> 3 -> 4 并且给定你链表中第三个值为3的节点，在调用你的函数后，该链表应变为1 -> 2 -> 4。
-```
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
-class Solution {
- public void deleteNode(ListNode node) {
-    if(node==null||node.next==null) return;//如果p为空或为单链表中最后一个结点不符合题意，直接返回  
-         ListNode q=node.next;//q为p的后继结点  
-         node.val=q.val;
-         node.next=q.next;//从单链表中删除结点q  
-        }  
-}
-```
-##8. 只出现一次的数字
+###5. 只出现一次的数字
 - 给定一个整数数组，除了某个元素外其余元素均出现两次。请找出这个只出现一次的元素。
 - 你的算法应该是一个线性时间复杂度。 你可以不用额外空间来实现它吗？
 - 思路：用异或的方式排查出只出现一次的那个元素。异或两个为1或者是 同号为假（0）异号为真（1）
@@ -307,7 +178,7 @@ class Solution {
          return temp  
      }  
 ```
-##9. 两个数组的交集
+###6. 两个数组的交集
 解法1：4ms
 复杂度
 
@@ -407,6 +278,162 @@ public class Solution {
                 value[0]++;
             }
         }
+```
+###7. 加一
+- 给定一个非负整数组成的非空数组，给整数加一。
+可以假设整数不包含任何前导零，除了数字0本身。
+最高位数字存放在列表的首位。
+```
+class Solution {
+    public int[] plusOne(int[] digits) {
+        if(digits == null || digits.length == 0) return null;
+        int len = digits.length; int[] ans = new int[len];
+        int carry = 1; for(int i = len - 1; i >= 0; i--) {
+            ans[i] = (digits[i] + carry) % 10;
+            carry = (digits[i] + carry) / 10;
+        }
+        if(carry == 1) {
+            int[] newAns = new int[len+1];
+            newAns[0] = 1;
+            for(int i = 1; i <= len; i++) {
+                newAns[i] = 0;
+                return newAns;
+            }
+        }
+        return ans;
+    }
+}
+```
+##字符串
+###1. 回文数字判断 
+
+```
+public static boolean isF(int x){
+		int x1=x;
+		boolean is=true;
+		int res=0;
+		if(x>0){
+			while(x>0){
+				res=x%10+res*10;
+				x=x/10;
+			}
+			if(res!=x1){
+				is=false;
+			}
+		}
+		else if(x==0){
+			is=true;
+		}
+		else
+			is=false;
+		return is; 
+	}
+```
+- 测试用例：
+	- [ ] x=0
+	- [ ] 负数
+	- [ ] 正数
+-----
+
+
+###2. 反转字符串
+- 解法1  3ms
+```
+class Solution {
+    public String reverseString(String s) {
+     if(s == null)
+        return null;
+    int len = s.length();
+    char[] cTmp = s.toCharArray();
+    char[] cRes = new char[len];
+    for (int i = 0; i < len; i++) {
+        cRes[i] = cTmp[len-1-i];
+    }
+    String sRes = String.valueOf(cRes);
+    return sRes;
+    }
+}
+```
+- 解法2 4ms
+```
+ public static String reverseString(String s) {
+
+        StringBuilder stringBuilder = new StringBuilder(s.length());
+        for (int i = s.length(); i > 0; i--) {
+            stringBuilder.append(s.charAt(i-1));
+
+        }
+        String ss=stringBuilder.toString();
+        return ss;
+    }
+```
+- 解法3  2ms
+```
+ public String reverseString(String s) {
+            if(s == null)
+                return null;
+            int len = s.length();
+            char[] cTmp = s.toCharArray();
+            char c;
+            for (int i = 0; i < len>>1; i++) {
+                c = cTmp[i];
+                cTmp[i] = cTmp[len -1 - i];
+                cTmp[len -1 - i] = c;
+            }
+            String sRes = String.valueOf(cTmp);
+            return sRes;
+        }
+    
+```
+- 解法4 2ms
+```
+    public String reverseString(String s) {
+    if(s == null || s.length() == 0)
+            return "";
+        char[] cs = s.toCharArray();
+        int begin = 0, end = s.length() - 1;
+        while(begin <= end){
+            char c = cs[begin];
+            cs[begin] = cs[end];
+            cs[end] = c;
+            begin++;
+            end--;
+        }
+        return new String(cs);
+	}
+```
+- 解法5 3ms
+```
+class Solution {
+    public String reverseString(String s) {
+   StringBuilder sb = new StringBuilder(s);
+    return sb.reverse().toString();//reverse源码中也是用reverseString1（）这种方法，法234基本相同。StringBuilder线程不安全
+	}
+}
+
+```
+##链表
+### 1. 删除链表的结点
+- 编写一个函数，在给定单链表一个结点(非尾结点)的情况下，删除该结点。
+
+假设该链表为1 -> 2 -> 3 -> 4 并且给定你链表中第三个值为3的节点，在调用你的函数后，该链表应变为1 -> 2 -> 4。
+```
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+ public void deleteNode(ListNode node) {
+    if(node==null||node.next==null) return;//如果p为空或为单链表中最后一个结点不符合题意，直接返回  
+         ListNode q=node.next;//q为p的后继结点  
+         node.val=q.val;
+         node.next=q.next;//从单链表中删除结点q  
+        }  
+}
         for(int i=0;i<nums2.length;i++){
             int[] value = map.get(nums2[i]);
             if(value!=null && value[0]>=1){
