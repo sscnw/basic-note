@@ -147,7 +147,7 @@ class Solution {
 　　4 3 2 1 7 6 5　　分别把左右reverse 一下
 
 　　5 6 7 1 2 3 4　　把总数组reverse 一下就会得到答案
-##存在重复（数组）
+##5. 存在重复（数组）
 给定一个整数数组，判断是否存在重复元素。
 
 如果任何值在数组中出现至少两次，函数应该返回 true。如果每个元素都不相同，则返回 false。
@@ -194,7 +194,7 @@ if (nums.length <= 1) {
 }
 ```
 
-##反转字符串
+##6. 反转字符串
 - 解法1  3ms
 ```
 class Solution {
@@ -271,7 +271,7 @@ class Solution {
 
 ```
 
-## 删除链表的结点
+## 7. 删除链表的结点
 - 编写一个函数，在给定单链表一个结点(非尾结点)的情况下，删除该结点。
 
 假设该链表为1 -> 2 -> 3 -> 4 并且给定你链表中第三个值为3的节点，在调用你的函数后，该链表应变为1 -> 2 -> 4。
@@ -290,8 +290,135 @@ class Solution {
          ListNode q=node.next;//q为p的后继结点  
          node.val=q.val;
          node.next=q.next;//从单链表中删除结点q  
+        }  
+}
+```
+##8. 只出现一次的数字
+- 给定一个整数数组，除了某个元素外其余元素均出现两次。请找出这个只出现一次的元素。
+- 你的算法应该是一个线性时间复杂度。 你可以不用额外空间来实现它吗？
+- 思路：用异或的方式排查出只出现一次的那个元素。异或两个为1或者是 同号为假（0）异号为真（1）
+1^2^3^2^1 = 3 ( 0011) 
+```
+     fun singleNumber(nums: IntArray): Int {  
+         var temp:Int = 0  
+          for (i in nums.indices) {  
+              temp = temp.xor(nums[i])  
+          }  
+         return temp  
+     }  
+```
+##9. 两个数组的交集
+解法1：4ms
+复杂度
+
+O(Min(N,M)) 时间 O(Min(N,M)) 空间
+思路
+
+先排序，用两个指针从头扫：
+小的那个肯定不行，指针往后
+相等的全都放到result里
+```
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        List<Integer> result = new ArrayList<Integer>();
+        int i = 0, j = 0;
+        while (i < nums1.length && j < nums2.length) {
+            int n1 = nums1[i];
+            int n2 = nums2[j];
+            if (n1 == n2) {
+                result.add(n1);
+                i++;
+                j++;
+            }
+            else if (n1 < n2)
+                i++;
+            else
+                j++;
         }
-        
-     
+        int[] ret = new int[result.size()];
+        int k = 0;
+        for (int num : result)
+           ret[k++] = num;
+        return ret;
+    }
+}
+ 
+```
+解法2：3ms
+```
+public class Solution {
+    /**
+     * @param nums1 an integer array
+     * @param nums2 an integer array
+     * @return an integer array
+     */
+    public int[] intersect(int[] nums1, int[] nums2) {
+        // Write your code here
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        ArrayList<Integer> A = new ArrayList<Integer>();
+        int i=0;
+        int j=0;
+        while(i<nums1.length && j<nums2.length ){
+            if(nums1[i] == nums2[j]){
+                A.add(nums1[i]);
+                i++;
+                j++;
+                
+            }else if(nums1[i] < nums2[j]){
+                i++;
+            }else{
+                j++;
+            }
+            
+        }
+        int[] res = new int[A.size()];
+        for( i=0;i<A.size();i++){
+            res[i] = (int)A.get(i);
+        }
+        return res;
+    }
+}
+```
+解法3：4ms
+HashMap记录数组1中相同元素出现的次数，数组2找相同，相同次数-1，为0的时候就不是交的部分了
+
+这个HashMap是一个中间存储，方便找到相同元素
+```
+public class Solution {
+    /**
+     * @param nums1 an integer array
+     * @param nums2 an integer array
+     * @return an integer array
+     */
+    public int[] intersect(int[] nums1, int[] nums2) {
+        // Write your code here
+        if(nums1==null || nums2 ==null)
+            return new int[]{};
+        HashMap<Integer,int[]> map = new HashMap<Integer,int[]>();
+        List<Integer> list = new ArrayList<Integer>();
+        for(int i=0;i<nums1.length;i++){
+            int[] value = map.get(nums1[i]);
+            if(value == null){
+                map.put(nums1[i],new int[]{1});
+            }else{
+                value[0]++;
+            }
+        }
+        for(int i=0;i<nums2.length;i++){
+            int[] value = map.get(nums2[i]);
+            if(value!=null && value[0]>=1){
+                list.add(nums2[i]);
+                value[0]--;
+            }
+        }
+        int[] A = new int[list.size()];
+        for(int i=0;i<list.size();i++){
+            A[i] = list.get(i);
+        }
+        return A;
+    }
 }
 ```
