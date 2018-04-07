@@ -150,8 +150,106 @@ alter table ex rename exp;
 ```
 alter table tablename modify attributename int;
 ```
-###修改ziiduan名
+###修改字段名
 ```
 alter table tablename change oldattri newattri newtype;
-
+```
+- 只修改字段名
+``alter table exp change stu_name  tea_name  oldtype``
+###增加字段
+``alter table exp add attribute1 type [完整性约束条件] [alter attr2]``
+- 表的第一个位置增加字段
+``ALTER TABLE  user ADD num INT(8) PRIMARY KEY FIRST``
+- 指定位置后增加字段
+``ALTER TABLE user ADD address VARCHAR(30) NOT NULL  AFTER phone``
+###删除字段
+``ALTER TABLE 表名 DROP 属性名``
+###修改字段的排列位置
+- 字段修改到第一个字段
+``ALTER TABLE user MODIFY name VARCHAR(30) first``
+- 字段修改到指定位置
+``ALTER TABLE user MODIFY sex TINYINT(1) AFTER age;``
+###更改表的存储引擎
+``ALTER TABLE  user ENGINE=MyISAM;``
+###删除表的外键约束
+``ALTER TABLE exp DROP FOREIGN KEY c_fk;``
+##删除表
+###删除没有被关联的普通表
+``DROP TABLE exp;``
+###删除被其他表关联的父表
+``ALTER TABLE exp DROP FOREIGN KEY c_fk;``
+``DROP TABLE exp;``
+# 索引
+##索引简介
+###索引的含义和特点
+- 是对数据比哦啊中一列或多列的值进行排序的一种结构，提高查询速度
+- 两种存储类型：B树索引和哈希索引
+- 提高检索速度
+- 占用物理空间，耗费创建和维护时间，增删改需要动态维护索引
+###索引的分类
+- 普通索引
+- 唯一性索引
+- 全文索引
+- 单列索引
+- 多列索引
+- 空间索引
+###索引的设计原子
+- 选择唯一性索引
+- 为经常需要排序，分组和联合操作的字段建立索引
+- 为常作为查询条件的字段建立索引
+- 限制索引的数目
+-尽量使用数据量少的索引
+- 尽量使用前缀来索引
+- 删除不再使用或者很少使用的索引
+##创建索引
+###创建表的时候创建索引
+- 创建普通索引
+![](imgs/20180407-121351.png)
+- 创建唯一性索引
+![](imgs/20180407-121432.png)
+- 创建全文索引
+![](imgs/20180407-121458.png)
+- 创建单列索引
+![](imgs/20180407-121536.png)
+- 创建多列索引
+![](imgs/20180407-121601.png)
+- 创建空间索引
+![](imgs/20180407-121652.png)
+###在已存在的的表上创建索引
+- 创建普通索引
+```
+create index index7_id on exp(id);
+```
+- 创建唯一性索引
+```
+CREATE UNIQUE INDEX index8_id ON index8(course_id);
+```
+- 创建全文索引
+```
+CREATE FULLTEXT INDEX index9_info ON index9(info);
+```
+- 创建单列索引
+```
+CREATE  INDEX index10_addr ON index10(address(4));
+```
+- 创建多列索引
+```
+CREATE INDEX index11_na ON index9(info);
+```
+- 创建空间索引
+```
+CREATE SPATIAL INDEX index12_line ON index12(line);
+```
+###用ALTER TABLE 语句来创建索引
+- 创建普通索引
+```
+ALTER TABLE exp ADD INDEX index13_name(name(20));
+```
+- 创建唯一性索引
+```
+ALTER TABLE index14 ADD UNIQUE INDEX index14(course_id);
+```
+- 创建单列索引
+```
+ALTER TABLE index15 ADD FULLTEXT INDEX index15_info(info);
 ```
