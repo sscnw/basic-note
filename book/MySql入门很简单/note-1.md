@@ -1,5 +1,5 @@
 ###1-3章不做描述
-#MySql数据类型
+#第四章：MySql数据类型
 ##MySql数据类型介绍
 ###整数类型
 ![](imgs/20180406-135911.png)
@@ -25,7 +25,7 @@
 - BLOB类型
 ##常见问题和解答
 ![](imgs/20180406-141934.png)
-#操作数据库
+#第五章：操作数据库
 ##创建数据库
 ``create database example;``
 ``show databases;`` 
@@ -240,7 +240,7 @@ CREATE INDEX index11_na ON index9(info);
 ```
 CREATE SPATIAL INDEX index12_line ON index12(line);
 ```
-###用ALTER TABLE 语句来创建索引
+###用ALTER TABLE 语句来创建索引(直接为已存在的表上的一个或几个字段创建索引)
 - 创建普通索引
 ```
 ALTER TABLE exp ADD INDEX index13_name(name(20));
@@ -249,7 +249,115 @@ ALTER TABLE exp ADD INDEX index13_name(name(20));
 ```
 ALTER TABLE index14 ADD UNIQUE INDEX index14(course_id);
 ```
+- 创建全文索引
+```
+ALTER TABLE index15 ADD FULLTEXT INDEX index15_info(infp);
+```
 - 创建单列索引
 ```
-ALTER TABLE index15 ADD FULLTEXT INDEX index15_info(info);
+ALTER TABLE index16 ADD  INDEX index16_info(info);
 ```
+-创建多列索引
+```
+ALTER TABLE index18 ADD SPTOAL INDEX index18_line(line);
+```
+##删除索引
+- DDROP INDEX 索引名 ON 表名
+##常见问题
+- MySql中索引，主键和唯一性的区别是什么？
+	- 索引简历在一个或者几个字段上，建立后，表中的数据旧按照索引的一定规则排列，这样可以提高查询速度。
+	- 主键是表中数据的唯一标识。不同的记录主键值不同。在建立主键时，系统会自动建立一个唯一性索引。
+	- 唯一性也是建立在表中一个或者几个字段上。目的时为了对于不同的记录美剧有唯一性
+- 表中建立了索引后，导入大量数据为什么会很慢
+	- 因为插入一条数据就要对该记录按索引进行排序。解决办法：在没有任何索引的情况插入数据，然后建立索引。
+#第八章 视图
+##视图简介
+- 由数据库中的一个表或多个表到处的虚拟表。作用时方便用户对数据的操作。
+###视图的含义
+- 是从数据库中一个或多个表中导出的虚拟表。还可以从已经存在的视图的基础上定义。数据库中只存放视图的定义。
+###视图的作用
+- 使操作简单化（用户角度）
+- 增加数据的安全性
+- 提高表的逻辑独立性
+##创建视图
+###在表单上创建视图
+```
+CREATE VIEW department_view1 AS SELECT * FROM department;
+DESC department_view1;
+```
+###在多表上创建视图
+```
+CREATE ALGORITHM=MERGE VIEW view1(name,dep,sex,age,address) AS SELECT name,dep.d_name,sex,2009-birthday,address FROM worker dep WHERE worker.d_id=dep.d_id WITH LOCAL CHECK OPTION;
+```
+##查看视图
+###DESC 视图名;
+###SHOW TABLE STATUS LIKE ‘视图名’
+###SHOW CREATE VIEW 视图名
+###SELECT * FROM  views;
+##修改视图
+###CREATE OR REPLACE ALGORITHM=TEMPTABLE VIEW dep_view(dep,function,location) AS SELECT d_name,function address FROM dep;
+###ALTER VIEW dep_view(dep,name,sex,location) AS SELECT d_name,worker.name,worker.sex,address FROPM dep,worker WHERE dep.d_id=worker.d_id WITH CHECK OPTION;
+##更新视图
+ - 视图更新，都是转换到基本表来更新。只能更新权限范围内的数据
+```
+UPDATE dep_view SET name='s',function='a';
+```
+- 以下的几种情况时=是不能更新视图的
+	- 视图中包含SUM（），COUNT（），MAX（）和MIN（）函数
+	- 视图中包含UNION，UNION ALL，DISTINCT，GROUP BY，HAVING等关键字
+	- 常量视图
+	- 视图中的SELECT中包含子查询
+	- 由不可更新的视图导出的视图
+	- 创建视图时，ALGORITHM 为TEMPTABLE类型
+	- 视图对应的表上存在没有默认值的列，而且该列没有包含在视图里
+- 最好不要对视图更新
+##删除视图
+```
+DROP VIEW IF EXITS view1, vew2;
+```
+##常见问题
+- MySQL中视图和表的区别是什么？
+	- 视图是生成的虚拟表
+	- 视图不占实际物理空间
+	- 建立和删除视图只影响视图本身
+	- 视图依赖表存在
+	- 一个树图可以对应一个或多个基本表
+	- 视图时基本表的抽象，在逻辑意义上简历的新关系
+# 第九章：触发器
+- MySQL中，触发器执行的顺序是BEFORE触发器，表操作（INSERT，UPDATE ，DELETE）和AFTER触发器
+##创建触发器
+###只有一个执行语句
+```
+CREATE TRIGGER trigger BEFORE|AFTER INSERT ON table FOR EACH ROW INSERT INTO trigger_name VALUES(NOW());
+```
+###多个执行语句的触发器
+```
+DELIMITER &&
+CREATE TRIGGER tri AFTER DELETE ON dep FOR EACH ROW 
+	BEGIN 
+		INSERT INTO tri_time VALUES('21:01:02');
+		INSERT INTO tri_time VALUES('11:11:11');
+	END
+		&&
+DELIMITER; 
+```
+- begin 和end中有分号，系统默认分号是SQL程序的结束标志，所以我们使用以上结构
+##查看触发器
+```
+SHOW TRIGGERS;
+SELECT * FROM table.triggers;
+SELECT * FROM table.triggers WHERE TRIGGER_NAME='tr';
+```
+##触发器的使用
+```
+CREATE TRIGGER before_insert BEFORE INSERT ON dep FOR EACH ROW INSERT INTO trigger_test VALUES(NULL,''S'');
+CREATE TRIGGER after_insert AFTER INSERT ON dep FOR EACH ROE INSERT INTO trigger_test VALUES(NULL,''SDF'');
+```
+- 在激活触发器时，对触发器中的执行语句存在一些限制。如触发器中不能包含START TRANSACTION ，COMMIT 或ROLLBACK等，也不能有CALL语句。
+- 触发器执行时，任何步骤出错都会阻止程序向下执行，但是对于普通表来说，已经更新过的记录时不能回滚的，更新后的数据将继续保存在表中。因此设计触发器要认真考虑
+##删除触发器
+```
+DROP TRIGGER trigger_name;
+```
+
+
